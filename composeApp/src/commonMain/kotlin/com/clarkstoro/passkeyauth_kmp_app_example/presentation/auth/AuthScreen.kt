@@ -12,12 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
@@ -29,12 +30,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.clarkstoro.passkeyauth_kmp_app_example.presentation.base.CollectEventsWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -69,7 +70,21 @@ fun AuthScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    TextField(
+                    Text(
+                        text = "🔐 Passkey Authentication Demo",
+                        fontSize = 24.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = "No passwords needed - your device will handle authentication securely",
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(Modifier.height(32.dp))
+
+                    OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         onValueChange = { updatedUsername: String ->
                             username.value = updatedUsername
@@ -78,7 +93,8 @@ fun AuthScreen(
                         label = {
                             Text("Insert your username")
                         },
-                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done)
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                        singleLine = true
                     )
                     Spacer(Modifier.height(32.dp))
                     Button(
@@ -87,7 +103,7 @@ fun AuthScreen(
                             viewModel.onUser(AuthActions.LoginPressed(username = username.value))
                         }
                     ) {
-                        Text("LOGIN")
+                        Text("🔐 LOGIN WITH PASSKEY")
                     }
                     Spacer(Modifier.height(16.dp))
                     Button(
@@ -96,19 +112,19 @@ fun AuthScreen(
                             viewModel.onUser(AuthActions.RegistrationPressed(username = username.value))
                         }
                     ) {
-                        Text("REGISTER")
+                        Text("✨ CREATE PASSKEY")
                     }
                 }
 
                 when {
                     uiState.isRegistrationSuccess == true -> {
-                        ResultDialog("Registration success!", isSuccess = true)
+                        ResultDialog("🎉 Passkey Created!", subtitle = "Your device is now your password", isSuccess = true)
                     }
                     uiState.isRegistrationSuccess == false -> {
-                        ResultDialog("Registration failure!", isSuccess = false)
+                        ResultDialog("\uD83D\uDE2D Registration Failed", subtitle = "Please ensure your device supports passkeys", isSuccess = false)
                     }
                     uiState.isLoginSuccess == false -> {
-                        ResultDialog("Login failure!", isSuccess = false)
+                        ResultDialog("\uD83D\uDE2D Login Failed", subtitle = "Please try authenticating with your device again", isSuccess = false)
                     }
                 }
             }
@@ -119,25 +135,41 @@ fun AuthScreen(
 @Composable
 private fun Loading() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator()
+            Spacer(Modifier.height(16.dp))
+            Text(
+                text = "🔐 Creating your passkey...",
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "Your device will prompt for biometric authentication",
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
 @Composable
-private fun ResultDialog(title: String, isSuccess: Boolean) {
+private fun ResultDialog(title: String, subtitle: String, isSuccess: Boolean) {
     Dialog(
-        properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = {}
     ) {
         Surface (
-            modifier = Modifier,
+            modifier = Modifier
+                .fillMaxWidth(0.9f),
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .background(Color.White)
-                    .padding(32.dp)
+                    .padding(vertical = 32.dp)
             ) {
                 Icon(
                     imageVector = if (isSuccess) Icons.Filled.Done else Icons.Filled.Close,
@@ -145,10 +177,18 @@ private fun ResultDialog(title: String, isSuccess: Boolean) {
                     tint = if (isSuccess) Color.Green else Color.Red,
                     modifier = Modifier.size(48.dp)
                 )
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(8.dp))
                 Text(
                     text = title,
                     fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = subtitle,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center
                 )
             }
