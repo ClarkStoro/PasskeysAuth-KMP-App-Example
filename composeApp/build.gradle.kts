@@ -26,6 +26,18 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            
+            // Set iOS deployment target
+            freeCompilerArgs += listOf(
+                "-Xruntime-logs=gc=info",
+                "-opt-in=kotlin.experimental.ExperimentalNativeApi"
+            )
+        }
+    }
+    
+    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
+        binaries.all {
+            freeCompilerArgs += "-Xdisable-phases=VerifyBitcode"
         }
     }
     
@@ -51,7 +63,9 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.ui)
+            implementation(compose.animation)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
