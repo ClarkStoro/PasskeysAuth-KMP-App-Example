@@ -44,7 +44,7 @@ class AuthViewModel(
 
     private suspend fun register(username: String) {
         try {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true, loadingType = LoadingType.REGISTRATION) }
             val result = authRepository.startPasskeyRegistration(username)
             passkeysCredentialManager.registerPasskey(
                 data = result
@@ -59,7 +59,7 @@ class AuthViewModel(
 
     private suspend fun login(username: String) {
         try {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true, loadingType = LoadingType.LOGIN) }
             val result = authRepository.startPasskeyLogin(username)
             passkeysCredentialManager.loginPasskey(
                 data = result,
@@ -73,13 +73,13 @@ class AuthViewModel(
     }
 
     private suspend fun setRegistrationResult(isSuccess: Boolean) {
-        _uiState.update { it.copy(isRegistrationSuccess = isSuccess, isLoading = false) }
+        _uiState.update { it.copy(isRegistrationSuccess = isSuccess, isLoading = false, loadingType = null) }
         delay(DIALOG_SHOW_MS)
         _uiState.update { it.copy(isRegistrationSuccess = null) }
     }
 
     private suspend fun setLoginResult(isSuccess: Boolean) {
-        _uiState.update { it.copy(isLoginSuccess = isSuccess, isLoading = false) }
+        _uiState.update { it.copy(isLoginSuccess = isSuccess, isLoading = false, loadingType = null) }
         delay(DIALOG_SHOW_MS)
         _uiState.update { it.copy(isLoginSuccess = null) }
     }

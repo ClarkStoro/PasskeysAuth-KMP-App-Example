@@ -60,7 +60,7 @@ fun AuthScreen(
         val username = remember { mutableStateOf("") }
         when {
             uiState.isLoading -> {
-                Loading()
+                Loading(loadingType = uiState.loadingType)
             }
 
             else -> {
@@ -133,21 +133,30 @@ fun AuthScreen(
 }
 
 @Composable
-private fun Loading() {
+private fun Loading(loadingType: LoadingType?) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = 32.dp)
         ) {
             CircularProgressIndicator()
             Spacer(Modifier.height(16.dp))
             Text(
-                text = "🔐 Creating your passkey...",
+                text = when (loadingType) {
+                    LoadingType.REGISTRATION -> "🔐 Creating your passkey..."
+                    LoadingType.LOGIN -> "🔐 Authenticating with passkey..."
+                    null -> "🔐 Processing..."
+                },
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Your device will prompt for biometric authentication",
+                text = when (loadingType) {
+                    LoadingType.REGISTRATION -> "Your device will prompt for biometric authentication to create a new passkey"
+                    LoadingType.LOGIN -> "Your device will prompt for biometric authentication to verify your identity"
+                    null -> "Your device will prompt for biometric authentication"
+                },
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
