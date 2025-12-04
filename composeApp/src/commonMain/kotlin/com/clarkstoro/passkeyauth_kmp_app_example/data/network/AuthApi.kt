@@ -25,6 +25,7 @@ class AuthApi(private val networkClient: NetworkClient) {
         private const val COMPLETE_LOGIN_ENDPOINT = "$BASE_ROUTE_AUTH/login/complete"
 
         private const val USERNAME_QUERY_PARAM = "username"
+        private const val SESSION_ID_QUERY_PARAM = "sessionId"
     }
 
     suspend fun startRegistration(username: String): StartRegistrationResponseDTO {
@@ -45,19 +46,15 @@ class AuthApi(private val networkClient: NetworkClient) {
         }.body<CompleteRegistrationResponseDTO>().message
     }
 
-    suspend fun startLogin(username: String): StartLoginResponseDTO {
-        return networkClient.httpClient.post(START_LOGIN_ENDPOINT) {
-            url {
-                parameter(USERNAME_QUERY_PARAM, username)
-            }
-        }.body<StartLoginResponseDTO>()
+    suspend fun startLogin(): StartLoginResponseDTO {
+        return networkClient.httpClient.post(START_LOGIN_ENDPOINT).body<StartLoginResponseDTO>()
     }
 
-    suspend fun completeLogin(username: String, request: CompleteLoginRequestDTO): CompleteLoginResponseDTO {
+    suspend fun completeLogin(sessionId: String, request: CompleteLoginRequestDTO): CompleteLoginResponseDTO {
         val loginResponse = networkClient.httpClient.post(COMPLETE_LOGIN_ENDPOINT) {
             contentType(ContentType.Application.Json)
             url {
-                parameter(USERNAME_QUERY_PARAM, username)
+                parameter(SESSION_ID_QUERY_PARAM, sessionId)
             }
             setBody(request)
         }.body<CompleteLoginResponseDTO>()

@@ -19,11 +19,11 @@ class AuthRepositoryImpl(
         return authApi.completeRegistration(username, request)
     }
 
-    override suspend fun startPasskeyLogin(username: String): StartLoginResponseDTO {
-        return authApi.startLogin(username)
+    override suspend fun startPasskeyLogin(): StartLoginResponseDTO {
+        return authApi.startLogin()
     }
 
-    override suspend fun completePasskeyLogin(username: String, request: CompleteLoginRequestDTO): String {
-        return authApi.completeLogin(username, request).message
+    override suspend fun completePasskeyLogin(sessionId: String, request: CompleteLoginRequestDTO): String {
+        return authApi.completeLogin(sessionId, request).message
     }
 }
