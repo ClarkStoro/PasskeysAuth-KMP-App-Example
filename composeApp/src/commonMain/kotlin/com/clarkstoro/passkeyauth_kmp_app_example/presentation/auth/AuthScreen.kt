@@ -91,7 +91,7 @@ fun AuthScreen(
                         },
                         value = username.value,
                         label = {
-                            Text("Insert your username")
+                            Text("Username (for registration only)")
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                         singleLine = true
@@ -100,7 +100,7 @@ fun AuthScreen(
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            viewModel.onUser(AuthActions.LoginPressed(username = username.value))
+                            viewModel.onUser(AuthActions.LoginPressed)
                         }
                     ) {
                         Text("🔐 LOGIN WITH PASSKEY")

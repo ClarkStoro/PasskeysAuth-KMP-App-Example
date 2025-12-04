@@ -132,16 +132,15 @@ This app uses **MVI (Model-View-Intent)** architecture for predictable state man
 - No network errors in logs
 
 ### 2. Test Registration Flow
-1. Enter any **username**
-2. Tap **"Register with Passkey"**
+1. Enter any **username** (only needed for registration)
+2. Tap **"Create Passkey"**
 3. System should prompt for **biometric/passkey creation**
-4. Success should show **"Registration successful!"** dialog
+4. Success should show **"Passkey Created!"** dialog
 
 ### 3. Test Login Flow
-1. Enter **same username**
-2. Tap **"Login with Passkey"**
-3. System should prompt for **biometric authentication**
-4. Success should navigate to **todos screen** with data
+1. Tap **"Login with Passkey"** (no username needed - the passkey identifies you automatically)
+2. System should prompt to **select a passkey and authenticate**
+3. Success should navigate to **todos screen** with data
 
 ## 🚨 Troubleshooting
 

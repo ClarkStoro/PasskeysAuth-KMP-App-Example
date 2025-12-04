@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartLoginResponseDTO(
+    val sessionId: String,
     val challenge: String,
     val allowCredentials: List<AllowCredentialDTO>,
     val timeout: Long,

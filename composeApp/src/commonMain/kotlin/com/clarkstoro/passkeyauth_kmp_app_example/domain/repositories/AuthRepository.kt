@@ -10,6 +10,6 @@ interface AuthRepository {
     suspend fun startPasskeyRegistration(username: String): StartRegistrationResponseDTO
     suspend fun completePasskeyRegistration(username: String, request: CompleteRegistrationRequestDTO): String
 
-    suspend fun startPasskeyLogin(username: String): StartLoginResponseDTO
-    suspend fun completePasskeyLogin(username: String, request: CompleteLoginRequestDTO): String
+    suspend fun startPasskeyLogin(): StartLoginResponseDTO
+    suspend fun completePasskeyLogin(sessionId: String, request: CompleteLoginRequestDTO): String
 }

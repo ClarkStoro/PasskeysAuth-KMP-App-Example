@@ -36,7 +36,7 @@ class AuthViewModel(
             }
             is AuthActions.LoginPressed -> {
                 viewModelScope.launch {
-                    login(username = action.username)
+                    login()
                 }
             }
         }
@@ -57,14 +57,14 @@ class AuthViewModel(
         }
     }
 
-    private suspend fun login(username: String) {
+    private suspend fun login() {
         try {
             _uiState.update { it.copy(isLoading = true, loadingType = LoadingType.LOGIN) }
-            val result = authRepository.startPasskeyLogin(username)
+            val result = authRepository.startPasskeyLogin()
             passkeysCredentialManager.loginPasskey(
                 data = result,
             ).let { passkeyLoginResult ->
-                authRepository.completePasskeyLogin(username, passkeyLoginResult)
+                authRepository.completePasskeyLogin(result.sessionId, passkeyLoginResult)
                 _events.send(AuthEvents.NavigateToHome)
             }
         } catch (e: Exception) {
